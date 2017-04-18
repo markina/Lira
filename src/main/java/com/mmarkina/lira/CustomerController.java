@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 /**
@@ -27,5 +30,25 @@ public class CustomerController {
     public String addCustomer(Model model) {
         model.addAttribute("customer", new Customer());
         return "customer";
+    }
+
+    @PostMapping("/customer")
+    public String submitCustomer(@ModelAttribute Customer customer) {
+        repository.save(customer);
+        return "result";
+    }
+
+    @GetMapping("/findCustomers")
+    public String findCustomers(Model model) {
+        return "findCustomers";
+    }
+
+    @PostMapping("/findCustomers")
+    public String resultFind(Model model, @RequestParam Customer customer) {
+        log.info("findCustomer");
+        log.info("birthday = " + customer.getBirthday());
+//        model.addAttribute("customers", repository.searchFilter(customer));
+        model.addAttribute("customers", repository.findAll());
+        return "findCustomers";
     }
 }
